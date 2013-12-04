@@ -1,0 +1,73 @@
+diff --git a/m4/blocks.m4 b/m4/blocks.m4
+index 49ee2a3..0c7a28f 100644
+--- a/m4/blocks.m4
++++ ./m4/blocks.m4
+@@ -50,15 +50,34 @@ AS_IF([test "x$dispatch_cv_cblocks" != "xno"], [
+       ], [
+ 	AC_MSG_RESULT([-lBlocksRuntime])
+       ], [
++        LIBS="$saveLIBS -lobjc"
++	AC_TRY_LINK([], [
++	  ^{ int k; k=0; }();
++ 	], [
++	  need_libobjc=yes;
++	  AC_MSG_RESULT([-lobjc])
++	], [
+ 	AC_MSG_ERROR([can't find Blocks runtime])
+       ])
+     ])
++    ])
++
++    AS_IF([test "x$need_libobjc" = "xyes"], [
++	AC_CHECK_HEADER([objc/blocks_private.h], [
++	    AC_DEFINE(BLOCKS_RUNTIME_FROM_LIBOBJC, 1, Define if the Blocks runtime resides in libobjc)
++	], [
++	    AC_MSG_ERROR([libobjc does not provide objc/blocks_private.h])
++	])
++    ], [
++	:
++    ])   
+     CFLAGS="$saveCFLAGS"
+     have_cblocks=true
+ ], [
+     CBLOCKS_FLAGS=""
+     have_cblocks=false
+ ])
++
+ AM_CONDITIONAL(HAVE_CBLOCKS, $have_cblocks)
+ AC_SUBST([CBLOCKS_FLAGS])
+ 
+diff --git a/src/internal.h b/src/internal.h
+index a69b36a..5ffaac5 100644
+--- a/src/internal.h
++++ ./src/internal.h
+@@ -130,8 +130,13 @@
+ #if TARGET_OS_WIN32
+ #define BLOCK_EXPORT extern "C" __declspec(dllexport)
+ #endif /* TARGET_OS_WIN32 */
++#ifndef BLOCKS_RUNTIME_FROM_LIBOBJC
+ #include <Block_private.h>
+ #include <Block.h>
++#else
++#include <objc/blocks_private.h>
++#include <objc/blocks_runtime.h>
++#endif /* BLOCKS_RUNTIME_FROM_LIBOBJC */
+ #endif /* __BLOCKS__ */
+ 
+ #include <assert.h>
+diff --git a/testing/dispatch_after.c b/testing/dispatch_after.c
+index dc4a3e7..eb01f72 100644
+--- a/testing/dispatch_after.c
++++ ./testing/dispatch_after.c
+@@ -27,7 +27,11 @@
+ #include <assert.h>
+ 
+ #include "dispatch_test.h"
++#ifndef BLOCKS_RUNTIME_FROM_LIBOBJC
+ #include <Block.h>
++#else
++#include <objc/blocks_runtime.h>
++#endif /* BLOCKS_RUNTIME_FROM_LIBOBJC */
+ 
+ void done(void *arg __attribute__((unused))) {
+     sleep(1);

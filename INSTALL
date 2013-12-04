@@ -1,0 +1,71 @@
+libdispatch INSTALL
+===================
+
+This is customized libdispatch based on http://nickhutchinson.me/libdispatch/ (the snapshot is from April 18, 2013 and corresponds to the Git commit a2a2f375902cf738ba75c2ff33f0f422e630b102).
+
+The patch libdispatch-libobjc2.patch has been applied to the libdispatch snapshot. The patch written by Niels Grewe was taken from here: http://www.halbordnung.de/~niels.grewe/gnustep/libdispatch-libobjc2.patch
+
+
+libobjc2 Compatibility Discussion
+---------------------------------
+
+This is a temporary solution until libBlocksRuntime symbols are turned into weak symbols, and libobjc2 can override them. 
+
+Patching libBlocksRuntime is more complex than just patching libdispatch, because it requires compiling your own libdispatch in addition to libBlocksRuntime. A packaged libdispatch won't use a custom libBlocksRuntime afaik.
+
+For the background behind this patched libdispatch:
+
+- http://lists.gnu.org/archive/html/discuss-gnustep/2012-08/msg00094.html
+- https://github.com/nickhutchinson/libdispatch/issues/2
+- http://llvm.org/svn/llvm-project/compiler-rt/trunk/BlocksRuntime (the official libBlocksRuntime repository)
+
+
+Linux vs FreeBSD Compatibility
+------------------------------
+
+This libdispatch is originally a port to Linux, so it is unknow whether it works on FreeBSD or not.
+
+
+Build & Install
+---------------
+
+Building the library requires a recent CMake version, at least 2.8. For old systems, you need to grab it from CMake website. For example, for Ubuntu 12.04, just download a binary and put it in your PATH environment variable:
+
+wget http://www.cmake.org/files/v2.8/cmake-2.8.12-Linux-i386.tar.gz
+tar -xvf cmake-2.8.12-Linux-i386.tar.gz
+export PATH=~/cmake-2.8.12-Linux-i386/bin:$PATH
+
+Once the dependencies are installed, build and install libdispatch:
+
+mkdir libdispatch/Build
+cd libdispatch/Build
+cmake -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release ..
+make && sudo -E make install
+
+
+Testing
+-------
+
+To test if the built libdispatch works, run test.sh:
+
+./test.sh
+
+You should get the following output (or something close):
+
+Strawberry fields...
+<dispatch_test.c content>
+Dispatch I/O wrote everything to stdout. Hurrah.
+Strawberry fields...
+Strawberry fields...
+Strawberry fields...
+etc.
+
+
+Grabbing and Patching libdispatch Snapshot
+------------------------------------------
+
+If you want a more recent snaspshot: 
+
+sudo rm -r libdispatch
+git clone git://github.com/nickhutchinson/libdispatch.git
+patch -p0 < ./libdispatch-libobjc2.patch // the patch doesn't apply cleanly so you need to tweak the results
