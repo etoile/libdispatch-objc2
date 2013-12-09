@@ -162,8 +162,13 @@
 #include <netinet/in.h>
 
 #ifdef __BLOCKS__
+#ifndef BLOCKS_RUNTIME_FROM_LIBOBJC
 #include <Block_private.h>
 #include <Block.h>
+#else
+#include <objc/blocks_private.h>
+#include <objc/blocks_runtime.h>
+#endif /* BLOCKS_RUNTIME_FROM_LIBOBJC */
 #endif /* __BLOCKS__ */
 
 #include <assert.h>

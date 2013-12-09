@@ -38,10 +38,18 @@ export PATH=~/cmake-2.8.12-Linux-i386/bin:$PATH
 Once the dependencies are installed, build and install libdispatch:
 
 mkdir libdispatch/Build
-cd libdispatch/Build
 cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release ..
 make && sudo -E make install
 
+Finally CPATH and LIBRARY_PATH environment variables should also include respectively:
+
+- /usr/local/include
+- /usr/local/lib
+
+As an alternative, if you use a GNUstep filesystem layout, you can create symbolic links. For example:
+
+ln -s /usr/local/lib/libdispatch.so $(GNUSTEP_LOCAL_ROOT)/Library/Libraries
+ln -s /usr/local/include/libdispatch $(GNUSTEP_LOCAL_ROOT)/Library/Headers
 
 Testing
 -------

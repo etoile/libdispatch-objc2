@@ -27,7 +27,11 @@
 #include <assert.h>
 
 #include <bsdtests.h>
+#ifndef BLOCKS_RUNTIME_FROM_LIBOBJC
 #include <Block.h>
+#else
+#include <objc/blocks_runtime.h>
+#endif /* BLOCKS_RUNTIME_FROM_LIBOBJC */
 
 #include "dispatch_test.h"
 
