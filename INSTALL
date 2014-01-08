@@ -68,13 +68,3 @@ Strawberry fields...
 Strawberry fields...
 Strawberry fields...
 etc.
-
-
-Grabbing and Patching libdispatch Snapshot
-------------------------------------------
-
-If you want a more recent snaspshot: 
-
-sudo rm -r libdispatch
-git clone git://github.com/nickhutchinson/libdispatch.git
-patch -p0 < ./libdispatch-libobjc2.patch // the patch doesn't apply cleanly so you need to tweak the results
