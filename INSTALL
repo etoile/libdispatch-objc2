@@ -52,6 +52,9 @@ As an alternative, if you use a GNUstep filesystem layout, you can create symbol
 ln -s /usr/local/lib/libdispatch.so $GNUSTEP_LOCAL_ROOT/Library/Libraries
 ln -s /usr/local/include/dispatch $GNUSTEP_LOCAL_ROOT/Library/Headers/dispatch
 
+**Note**: If libdispatch is installed in /usr/local, clang searches /usr/local/include/dispatch/ and not just /usr/local/include (not sure why). For all projects that includes libdispatch headers (installed outside of /usr), this means we must pass -I$(GNUSTEP_LOCAL_ROOT)/Library/Headers/dispatch.
+
+
 Testing
 -------
 
