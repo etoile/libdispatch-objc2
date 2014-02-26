@@ -49,8 +49,8 @@ Finally CPATH and LIBRARY_PATH environment variables should also include respect
 
 As an alternative, if you use a GNUstep filesystem layout, you can create symbolic links. For example:
 
-ln -s /usr/local/lib/libdispatch.so $(GNUSTEP_LOCAL_ROOT)/Library/Libraries
-ln -s /usr/local/include/libdispatch $(GNUSTEP_LOCAL_ROOT)/Library/Headers
+ln -s /usr/local/lib/libdispatch.so $GNUSTEP_LOCAL_ROOT/Library/Libraries
+ln -s /usr/local/include/dispatch $GNUSTEP_LOCAL_ROOT/Library/Headers/dispatch
 
 Testing
 -------
